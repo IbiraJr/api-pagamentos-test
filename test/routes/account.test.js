@@ -6,7 +6,8 @@ const MAIN_ROUTE = '/v1/accounts';
 let user;
 let user2;
 
-beforeEach(async() =>{
+beforeAll(async() =>{
+    
     const res = await app.services.user.save({name: 'User Account', mail: `${Date.now()}@mail.com`, password: 123456});
     user = { ...res[0] };
     user.token = jwt.encode(user, 'segredo');
@@ -15,6 +16,10 @@ beforeEach(async() =>{
   
 });
 
+beforeEach(async () =>{
+    await app.db('transactions').del();
+    await app.db('accounts').del();
+});
 
 test('Deve inserir uma conta com sucesso', () =>{
     return request(app).post(MAIN_ROUTE)
@@ -77,23 +82,23 @@ test('Não deve retornar uma conta de outro usuário', () =>{
    return app.db('accounts')
     .insert({name: 'Acc User #2', user_id: user2.id}, ['id'])
     .then(acc => request(app).get(`${MAIN_ROUTE}/${acc[0].id}`)
-    .set('authorization', `bearer ${user.token}`))
+    .set('authorization', `bearer ${user.token}`)
     .then((res) =>{
         expect(res.status).toBe(403);
         expect(res.body.error).toBe('Este recurso não pertence ao usuário');
 
-    });
+    }));
 });
 
 test('Deve alterar uma conta', () =>{
     return app.db('accounts')
     .insert({name: 'Acc To Updated', user_id: user.id}, ['id'])
     .then(acc => request(app).put(`${MAIN_ROUTE}/${acc[0].id}`)
-        .send({ name: 'Acc To Updated'}).set('authorization', `bearer ${user.token}`))
+        .send({ name: 'Acc To Updated'}).set('authorization', `bearer ${user.token}`)
     .then((res) =>{
         expect(res.status).toBe(200);
         expect(res.body.name).toBe('Acc To Updated');
-    });
+    }));
 });
 
 test('Não deve alterar uma conta de outro usuário', () =>{

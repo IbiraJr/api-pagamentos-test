@@ -40,7 +40,7 @@ module.exports = (app) =>{
     router.delete('/:id',(req, res, next) =>{
         app.services.account.remove(req.params.id)
         .then(() => res.status(204).send())
-        .catch(erro => next(erro));;
+        .catch(erro => next(erro));
     });
     return router;
 };
