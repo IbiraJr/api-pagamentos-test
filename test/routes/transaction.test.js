@@ -1,12 +1,12 @@
 const request = require('supertest');
 const jwt = require('jwt-simple');
 const app = require('../../src/app');
+const MAIN_ROUTE = '/v1/transactions';
 
 let user;
 let user2;
 let acc;
 let acc2;
-const MAIN_ROUTE = '/v1/transactions';
 beforeAll(async() =>{
     await app.db('transactions').del();
     await app.db('accounts').del();

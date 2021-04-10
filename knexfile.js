@@ -5,10 +5,13 @@ module.exports = {
             host: 'localhost',
             user: 'postgres',
             password: '123456789',
-            database: 'api-pagamentos',
+            database: 'api_pagamentos',
         },
         migrations: {
             directory: 'src/migrations',
+        },
+        seeds: {
+            directory: 'src/seeds',
         },
     },
 };
