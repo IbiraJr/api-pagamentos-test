@@ -9,6 +9,7 @@ let acc;
 let acc2;
 beforeAll(async() =>{
     await app.db('transactions').del();
+    await app.db('transfers').del();
     await app.db('accounts').del();
     await app.db('users').del();
     const users = await app.db('users').insert([
@@ -146,7 +147,7 @@ test('Não deve remover uma transação de outro usuario', () => {
 
 test('Não deve remover conta com transação', () => {
     return app.db('transactions').insert(
-        { description: 'T to delete', date: new Date(), ammount: 100, type: 'I', acc_id: acc.id},
+        { description: 'To delete', date: new Date(), ammount: 100, type: 'I', acc_id: acc.id},
         ['id']
         ).then(() => request(app).delete(`/v1/accounts/${acc.id}`)
             .set('authorization', `bearer ${user.token}`)

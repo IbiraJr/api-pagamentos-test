@@ -7,18 +7,12 @@ let user;
 let user2;
 
 beforeAll(async() =>{
-    
     const res = await app.services.user.save({name: 'User Account', mail: `${Date.now()}@mail.com`, password: 123456});
     user = { ...res[0] };
     user.token = jwt.encode(user, 'segredo');
     const res2 = await app.services.user.save({name: 'User Account #2', mail: `${Date.now()}@mail.com`, password: 123456});
     user2 = { ...res2[0] };  
   
-});
-
-beforeEach(async () =>{
-    await app.db('transactions').del();
-    await app.db('accounts').del();
 });
 
 test('Deve inserir uma conta com sucesso', () =>{
@@ -54,7 +48,10 @@ test('Não deve inserir uma conta com nome duplicado, para o mesmo usuário', ()
     
 });
 
-test('Deve listar apenas as contas do usuário', () =>{
+test('Deve listar apenas as contas do usuário', async () =>{
+    await app.db('transactions').del();
+    await app.db('transfers').del();
+    await app.db('accounts').del();
     return app.db('accounts').insert([
         {name: 'Acc User #1', user_id: user.id },
         {name: 'Acc User #2', user_id: user2.id }

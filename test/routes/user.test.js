@@ -36,9 +36,9 @@ test('Deve inserir usuario com sucesso', () =>{
 
 test('Deve armazenar senha criptografada',async () =>{
     const res = await request(app).post(MAIN_ROUTE)
-    .send({name: 'Walter Mitty', mail: `${Date.now()}@mail.com`, password: '123456'})
+    .send({ name: 'Walter Mitty', mail: `${Date.now()}@mail.com`, password: '123456' })
     .set('authorization', `bearer ${user.token}`);
-    expect(res.status).toBe(201);
+  expect(res.status).toBe(201);
 
     const {id} = res.body;
     const userDB = await app.services.user.findOne({id});
